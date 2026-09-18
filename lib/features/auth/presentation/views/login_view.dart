@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti9_eco/core/components/custom_text_field.dart';
 import 'package:nti9_eco/core/utils/app_paddings.dart';
+import 'package:nti9_eco/features/auth/presentation/cubit/login_cubit/login_state.dart';
+
+import '../cubit/login_cubit/login_cubit.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -8,36 +12,41 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: AppPaddings.defaultPadding,
-          child: Column(
-            children: [
-              Text('Welcome\nBack!'),
-              SizedBox(height: 40,),
-              // CustomTextField(
-              //   hint: 'Email',
-              //     prefixIconPath: '',
-              //     controller: email
-              // ),
-              // SizedBox(height: 20,),
-              // CustomTextField(
-              //     hint: 'Password',
-              //     prefixIconPath: '',
-              //     controller: password,
-              //   suffixIconPath: '',
-              //   obscureText: isPasswordSecure,
-              //   onSuffixPressed: (){
-              //
-              //   },
-              // ),
-            ],
+    return BlocProvider(
+      create: (context)=> LoginCubit(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Login'),
+        ),
+        body: BlocBuilder<LoginCubit, LoginState>(
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: AppPaddings.defaultPadding,
+                child: Column(
+                  children: [
+                    Text('Welcome\nBack!'),
+                    SizedBox(height: 40,),
+                    CustomTextField(
+                      hint: 'Email',
+                        prefixIconPath: '',
+                        controller: context.read<LoginCubit>().email
+                    ),
+                    SizedBox(height: 20,),
+                    CustomTextField(
+                        hint: 'Password',
+                        prefixIconPath: '',
+                        controller: context.read<LoginCubit>().password,
+                      suffixIconPath: '',
+                      obscureText: context.read<LoginCubit>().isPasswordSecure,
+                      onSuffixPressed: context.read<LoginCubit>().changePassSecure,
+                    ),
+                  ],
 
-          ),
+                ),
+              ),
+            );
+          }
         ),
       ),
     );
