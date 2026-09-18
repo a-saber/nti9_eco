@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti9_eco/core/components/custom_btn.dart';
 import 'package:nti9_eco/core/components/custom_text_field.dart';
 import 'package:nti9_eco/core/utils/app_paddings.dart';
 import 'package:nti9_eco/features/auth/presentation/cubit/login_cubit/login_state.dart';
@@ -41,6 +42,11 @@ class LoginView extends StatelessWidget {
                       obscureText: context.read<LoginCubit>().isPasswordSecure,
                       onSuffixPressed: context.read<LoginCubit>().changePassSecure,
                     ),
+                    SizedBox(height: 40,),
+                    if(state is LoginLoadingState)
+                    CircularProgressIndicator()
+                    else
+                    CustomBtn(text: 'Login', onPressed: context.read<LoginCubit>().login)
                   ],
 
                 ),
