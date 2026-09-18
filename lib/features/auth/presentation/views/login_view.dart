@@ -5,6 +5,8 @@ import 'package:nti9_eco/core/components/custom_text_field.dart';
 import 'package:nti9_eco/core/utils/app_paddings.dart';
 import 'package:nti9_eco/features/auth/presentation/cubit/login_cubit/login_state.dart';
 
+import '../../../../core/helper/my_navigator.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../cubit/login_cubit/login_cubit.dart';
 
 class LoginView extends StatelessWidget {
@@ -19,7 +21,29 @@ class LoginView extends StatelessWidget {
         appBar: AppBar(
           title: Text('Login'),
         ),
-        body: BlocBuilder<LoginCubit, LoginState>(
+        body: BlocConsumer<LoginCubit, LoginState>(
+          listener: (context, state){
+            if(state is LoginErrorState){
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.errorMsg,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+            else if(state is LoginSuccessState){
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Welcome ${state.userModel.name}',
+                    style: TextStyle(color: Colors.white),),
+                    backgroundColor: AppColors.primary,)
+              );
+              MyNavigator.goTo(context, toPage: Scaffold(),
+                  type: NavigatorType.pushAndRemoveUntil);
+            }
+          },
           builder: (context, state) {
             return SingleChildScrollView(
               child: Padding(
