@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti9_eco/features/home/presentation/cubit/get_categories/get_categories_cubit.dart';
+import 'package:nti9_eco/features/home/presentation/cubit/get_categories/get_categories_state.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/get_sliders/get_sliders_cubit.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/get_sliders/get_sliders_state.dart';
 
@@ -9,48 +11,91 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context)=> GetSlidersCubit()..fetch(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context)=> GetSlidersCubit()..fetch()),
+        BlocProvider(create: (context)=> GetCategoriesCubit()..fetch()),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: Text('Home'),
         ),
-        body: BlocBuilder<GetSlidersCubit, GetSlidersState>(
-          builder: (context, state){
-            if(state is GetSlidersLoadingState){
-              return Center(child: CircularProgressIndicator());
-            }
-            else if(state is GetSlidersErrorState){
-              return Center(child: Text(state.errorMsg));
-            }
-            else if(state is GetSlidersSuccessState){
-              return CarouselSlider(
-                options: CarouselOptions(
-                    height: 400.0,
-                  viewportFraction: 1,
-                  autoPlay: true,
-                  autoPlayInterval: Duration(milliseconds: 500)
+        body: Column(
+          children: [
 
-
-                ),
-                items: state.sliders.map((sliderModel) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(image: NetworkImage(sliderModel.imagePath??''))
+            // Categories
+            BlocBuilder<GetCategoriesCubit, GetCategoriesState>(
+                builder: (context, state){
+                  if(state is GetCategoriesLoadingState){
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  else if(state is GetCategoriesErrorState){
+                    return Center(child: Text(state.errorMsg));
+                  }
+                  else if(state is GetCategoriesSuccessState){
+                    return SizedBox(
+                      height: 100,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index)=> Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(state.categories[index].imagePath??''),
+                              ),
+                              SizedBox(height: 10,),
+                              Text(state.categories[index].title??'')
+                            ],
                           ),
-                          child: Text('${sliderModel.title}', style: TextStyle(fontSize: 16.0),)
+                          separatorBuilder: (context, index)=> SizedBox(width: 20,),
+                          itemCount: state.categories.length
+                      ),
+                    );
+                  }
+                  return SizedBox();
+                }
+            ),
+            SizedBox(height: 20,),
+
+            // Sliders
+            BlocBuilder<GetSlidersCubit, GetSlidersState>(
+              builder: (context, state){
+                if(state is GetSlidersLoadingState){
+                  return Center(child: CircularProgressIndicator());
+                }
+                else if(state is GetSlidersErrorState){
+                  return Center(child: Text(state.errorMsg));
+                }
+                else if(state is GetSlidersSuccessState){
+                  return CarouselSlider(
+                    options: CarouselOptions(
+                        height: 400.0,
+                      viewportFraction: 1,
+                      autoPlay: true,
+                      autoPlayInterval: Duration(seconds: 2)
+
+
+                    ),
+                    items: state.sliders.map((sliderModel) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(image: NetworkImage(sliderModel.imagePath??''))
+                              ),
+                              child: Text('${sliderModel.title}', style: TextStyle(fontSize: 16.0),)
+                          );
+                        },
                       );
-                    },
+                    }).toList(),
                   );
-                }).toList(),
-              );
-            }
-            return SizedBox();
-          }
+                }
+                return SizedBox();
+              }
+            ),
+          ],
         ),
       ),
     );
