@@ -7,6 +7,7 @@ import 'package:nti9_eco/features/auth/presentation/cubit/login_cubit/login_stat
 
 import '../../../../core/helper/my_navigator.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../home/presentation/views/home_view.dart';
 import '../cubit/login_cubit/login_cubit.dart';
 
 class LoginView extends StatelessWidget {
@@ -40,11 +41,12 @@ class LoginView extends StatelessWidget {
                     style: TextStyle(color: Colors.white),),
                     backgroundColor: AppColors.primary,)
               );
-              MyNavigator.goTo(context, toPage: Scaffold(),
+              MyNavigator.goTo(context, toPage: HomeView(),
                   type: NavigatorType.pushAndRemoveUntil);
             }
           },
           builder: (context, state) {
+
             return SingleChildScrollView(
               child: Padding(
                 padding: AppPaddings.defaultPadding,
