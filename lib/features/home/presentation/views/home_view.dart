@@ -1,8 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nti9_eco/core/cache/cache_helper.dart';
+import 'package:nti9_eco/core/cache/cache_keys.dart';
 import 'package:nti9_eco/core/helper/my_navigator.dart';
 import 'package:nti9_eco/core/utils/app_paddings.dart';
+import 'package:nti9_eco/features/auth/presentation/views/login_view.dart';
 import 'package:nti9_eco/features/cart/presentation/views/cart_view.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/get_categories/get_categories_cubit.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/get_categories/get_categories_state.dart';
@@ -22,6 +25,26 @@ class HomeView extends StatelessWidget {
         BlocProvider(create: (context) => GetCategoriesCubit()..fetch()),
       ],
       child: Scaffold(
+        drawer: Drawer(
+          child: Column(
+            children: [
+              Spacer(),
+              ListTile(
+                title: Text('Logout'),
+                trailing: Icon(Icons.logout),
+                onTap: () async {
+                  await CacheHelper.removeValue(key: CacheKeys.accessToken);
+                  await CacheHelper.removeValue(key: CacheKeys.refreshToken);
+                  MyNavigator.goTo(
+                    context,
+                    toPage: LoginView(),
+                    type: NavigatorType.pushAndRemoveUntil,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.shopping_cart_checkout_rounded),
           onPressed: () => MyNavigator.goTo(context, toPage: CartView()),

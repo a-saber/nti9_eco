@@ -43,6 +43,7 @@ dependencies:
   geolocator:
   flutter_bloc:
   carousel_slider:
+  shared_preferences: 
 
 dev_dependencies:
   flutter_test:
