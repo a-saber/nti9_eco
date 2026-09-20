@@ -6,16 +6,18 @@ class GetProductsResponseModel {
 
   GetProductsResponseModel({this.products, this.status});
 
-  GetProductsResponseModel.fromJson(Map<String, dynamic> json) {
-    if (json['best_seller_products'] != null) {
+  GetProductsResponseModel.fromJson(
+    Map<String, dynamic> json, {
+    required String productsKey,
+  }) {
+    if (json[productsKey] != null) {
       products = [];
-      json['best_seller_products'].forEach((v) {
+      json[productsKey].forEach((v) {
         products!.add(ProductModel.fromJson(v));
       });
     }
     status = json['status'];
   }
-
 }
 
 class ProductModel {
@@ -38,9 +40,9 @@ class ProductModel {
     this.isBestSeller,
     this.isFavorite,
     this.rating,
-    this.categoryModel
+    this.categoryModel,
   });
-  ProductModel.fromJson(Map<String, dynamic> json){
+  ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     imagePath = json['image_path'];
     isBestSeller = json['best_seller'] == 1;
@@ -49,10 +51,8 @@ class ProductModel {
     name = json['name'];
     price = json['price'];
     rating = json['rating'];
-    if(json['category'] != null){
+    if (json['category'] != null) {
       categoryModel = CategoryModel.fromJson(json['category']);
     }
-
   }
-
 }

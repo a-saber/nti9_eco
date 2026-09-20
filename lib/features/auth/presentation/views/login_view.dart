@@ -13,18 +13,15 @@ import '../cubit/login_cubit/login_cubit.dart';
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context)=> LoginCubit(),
+      create: (context) => LoginCubit(),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Login'),
-        ),
+        appBar: AppBar(title: Text('Login')),
         body: BlocConsumer<LoginCubit, LoginState>(
-          listener: (context, state){
-            if(state is LoginErrorState){
+          listener: (context, state) {
+            if (state is LoginErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -34,51 +31,60 @@ class LoginView extends StatelessWidget {
                   backgroundColor: Colors.red,
                 ),
               );
-            }
-            else if(state is LoginSuccessState){
+            } else if (state is LoginSuccessState) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Welcome ${state.userModel.name}',
-                    style: TextStyle(color: Colors.white),),
-                    backgroundColor: AppColors.primary,)
+                SnackBar(
+                  content: Text(
+                    'Welcome ${state.userModel.name}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: AppColors.primary,
+                ),
               );
-              MyNavigator.goTo(context, toPage: HomeView(),
-                  type: NavigatorType.pushAndRemoveUntil);
+              MyNavigator.goTo(
+                context,
+                toPage: HomeView(),
+                type: NavigatorType.pushAndRemoveUntil,
+              );
             }
           },
           builder: (context, state) {
-
             return SingleChildScrollView(
               child: Padding(
                 padding: AppPaddings.defaultPadding,
                 child: Column(
                   children: [
                     Text('Welcome\nBack!'),
-                    SizedBox(height: 40,),
+                    SizedBox(height: 40),
                     CustomTextField(
                       hint: 'Email',
-                        prefixIconPath: '',
-                        controller: context.read<LoginCubit>().email
+                      prefixIcon: Icon(Icons.email),
+                      controller: context.read<LoginCubit>().email,
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20),
                     CustomTextField(
-                        hint: 'Password',
-                        prefixIconPath: '',
-                        controller: context.read<LoginCubit>().password,
-                      suffixIconPath: '',
+                      hint: 'Password',
+                      prefixIcon: Icon(Icons.password),
+                      controller: context.read<LoginCubit>().password,
+                      suffixIcon: Icon(Icons.remove_red_eye),
                       obscureText: context.read<LoginCubit>().isPasswordSecure,
-                      onSuffixPressed: context.read<LoginCubit>().changePassSecure,
+                      onSuffixPressed: context
+                          .read<LoginCubit>()
+                          .changePassSecure,
                     ),
-                    SizedBox(height: 40,),
-                    if(state is LoginLoadingState)
-                    CircularProgressIndicator()
+                    SizedBox(height: 40),
+                    if (state is LoginLoadingState)
+                      CircularProgressIndicator()
                     else
-                    CustomBtn(text: 'Login', onPressed: context.read<LoginCubit>().login)
+                      CustomBtn(
+                        text: 'Login',
+                        onPressed: context.read<LoginCubit>().login,
+                      ),
                   ],
-
                 ),
               ),
             );
-          }
+          },
         ),
       ),
     );

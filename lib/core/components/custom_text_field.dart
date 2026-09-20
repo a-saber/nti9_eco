@@ -10,19 +10,19 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     required this.hint,
-    required this.prefixIconPath,
+    required this.prefixIcon,
     required this.controller,
     this.onSuffixPressed,
-    this.suffixIconPath,
-    this.obscureText = false
+    this.suffixIcon,
+    this.obscureText = false,
   });
 
   final String hint;
 
-  final String prefixIconPath;
+  final Widget prefixIcon;
   final TextEditingController controller;
   final void Function()? onSuffixPressed;
-  final String? suffixIconPath;
+  final Widget? suffixIcon;
   final bool obscureText;
 
   @override
@@ -37,15 +37,9 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText,
       obscuringCharacter: '*',
       decoration: InputDecoration(
-        prefixIcon: Padding(
-          padding: REdgeInsets.all(16.0),
-          child: CustomSvg(path: prefixIconPath,),
-        ),
-        suffixIcon: suffixIconPath != null
-            ? IconButton(
-                onPressed: onSuffixPressed,
-                icon: SvgPicture.asset(suffixIconPath!),
-              )
+        prefixIcon: Padding(padding: REdgeInsets.all(16.0), child: prefixIcon),
+        suffixIcon: suffixIcon != null
+            ? IconButton(onPressed: onSuffixPressed, icon: suffixIcon!)
             : null,
         hintText: hint,
         hintStyle: TextStyle(
