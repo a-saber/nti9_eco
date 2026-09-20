@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:nti9_eco/features/cart/presentation/cubit/cart/cart_cubit.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/search/search_cubit.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/search/search_state.dart';
 import 'package:nti9_eco/features/home/presentation/views/widgets/search_field.dart';
@@ -13,7 +14,7 @@ class SearchView extends StatelessWidget {
     return BlocProvider(
       create: (context) => SearchCubit(),
       child: Scaffold(
-        appBar: AppBar(title: Text('Search'), centerTitle: true),
+        appBar: AppBar(title: Text('Search')),
         body: BlocBuilder<SearchCubit, SearchState>(
           builder: (context, state) {
             return Padding(
@@ -85,6 +86,28 @@ class SearchView extends StatelessWidget {
                                           ),
                                           Text('₹ ${product.price}'),
                                           Text('${product.rating}'),
+                                          SizedBox(
+                                            width: 200.w,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                context
+                                                    .read<CartCubit>()
+                                                    .addProduct(
+                                                      product: product,
+                                                    );
+                                              },
+
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(Icons.shopping_bag),
+                                                  SizedBox(width: 10),
+                                                  Text('Add To Cart'),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     );

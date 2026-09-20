@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nti9_eco/core/helper/my_navigator.dart';
 import 'package:nti9_eco/core/utils/app_paddings.dart';
+import 'package:nti9_eco/features/cart/presentation/views/cart_view.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/get_categories/get_categories_cubit.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/get_categories/get_categories_state.dart';
 import 'package:nti9_eco/features/home/presentation/cubit/get_sliders/get_sliders_cubit.dart';
@@ -21,6 +22,10 @@ class HomeView extends StatelessWidget {
         BlocProvider(create: (context) => GetCategoriesCubit()..fetch()),
       ],
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.shopping_cart_checkout_rounded),
+          onPressed: () => MyNavigator.goTo(context, toPage: CartView()),
+        ),
         appBar: AppBar(title: Text('Home')),
         body: SingleChildScrollView(
           child: Column(
